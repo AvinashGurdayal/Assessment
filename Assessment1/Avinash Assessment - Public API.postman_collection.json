@@ -1,0 +1,483 @@
+{
+	"info": {
+		"_postman_id": "dff01a98-6b5f-47f9-a4f7-b220dd837ab6",
+		"name": "Avinash Assessment - Public API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Health Check",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "0052fdaf-c3d9-4397-9e54-cd7d2408970c",
+						"exec": [
+							"//Check if response is not OK and stop execution\r",
+							"if (pm.response.status !== 'OK') {\r",
+							"    console.log(pm.response)\r",
+							"    postman.setNextRequest(null)\r",
+							"    throw new Error(\"API Health Check Failed\");\r",
+							"}\r",
+							"else {\r",
+							"    //Check if response Alive it not true\r",
+							"    var jsonData = pm.response.json();\r",
+							"    if (jsonData.alive !== true) {\r",
+							"        console.log(jsonData)\r",
+							"        postman.setNextRequest(null)\r",
+							"        throw new Error(\"API Health Check Failed\");\r",
+							"    }\r",
+							"\r",
+							"    pm.test(\"Status code is 200\", function () {\r",
+							"        pm.response.to.have.status(200);\r",
+							"    });\r",
+							"    pm.test(\"Body matches string\", function () {\r",
+							"        pm.expect(pm.response.text()).to.include(\"true\");\r",
+							"    });\r",
+							"}\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "https://api.publicapis.org/health",
+					"protocol": "https",
+					"host": [
+						"api",
+						"publicapis",
+						"org"
+					],
+					"path": [
+						"health"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Entry",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "6c4f3455-09bb-4bbe-a375-5edfcce11ee8",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "bf9db2ed-e65d-4b05-a88b-f25d891ac732",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"var jsonData = pm.response.json();",
+							"pm.test(\"Count is correct\", function () {",
+							"    ",
+							"    pm.expect(jsonData.count).to.eql(jsonData.entries.length);",
+							"});",
+							"pm.test(\"Title is Correct\", function () {",
+							"    pm.expect(jsonData.entries[0].API).to.eql(\"AdoptAPet\");",
+							"});",
+							"pm.test(\"Description is Correct\", function () {",
+							"    pm.expect(jsonData.entries[0].Description).to.eql(\"Resource to help get pets adopted\");",
+							"});",
+							"pm.test(\"Auth is Correct\", function () {",
+							"    pm.expect(jsonData.entries[0].Auth).to.eql(\"apiKey\");",
+							"});",
+							"pm.test(\"Supports HTTPS\", function () {",
+							"    pm.expect(jsonData.entries[0].HTTPS).to.eql(true);",
+							"});",
+							"pm.test(\"Supports CORS\", function () {",
+							"    pm.expect(jsonData.entries[0].Cors).to.eql(\"yes\");",
+							"});",
+							"pm.test(\"Link is Correct\", function () {",
+							"    pm.expect(jsonData.entries[0].Link).to.eql(\"https://www.adoptapet.com/public/apis/pet_list.html\");",
+							"});",
+							"pm.test(\"Category is Correct\", function () {",
+							"    pm.expect(jsonData.entries[0].Category).to.eql(\"Animals\");",
+							"});",
+							"pm.test(\"Response contains count parameter\", function () {",
+							"    pm.expect(pm.response.text()).to.include(\"count\");",
+							"});",
+							"pm.test(\"Response contains count parameter\", function () {",
+							"    pm.expect(pm.response.text()).to.include(\"entries\");",
+							"});",
+							"pm.test(\"Response contains entries parameter\", function () {",
+							"    pm.expect(pm.response.text()).to.include(\"API\");",
+							"});",
+							"pm.test(\"Response contains Description parameter\", function () {",
+							"    pm.expect(pm.response.text()).to.include(\"Description\");",
+							"});",
+							"pm.test(\"Response contains Auth parameter\", function () {",
+							"    pm.expect(pm.response.text()).to.include(\"Auth\");",
+							"});",
+							"pm.test(\"Response contains HTTPS parameter\", function () {",
+							"    pm.expect(pm.response.text()).to.include(\"HTTPS\");",
+							"});",
+							"pm.test(\"Response contains Cors parameter\", function () {",
+							"    pm.expect(pm.response.text()).to.include(\"Cors\");",
+							"});",
+							"pm.test(\"Response contains Link parameter\", function () {",
+							"    pm.expect(pm.response.text()).to.include(\"Link\");",
+							"});",
+							"pm.test(\"Response contains Category parameter\", function () {",
+							"    pm.expect(pm.response.text()).to.include(\"Category\");",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "https://api.publicapis.org/entries?title=AdoptAPet&Description=Resource to help get pets adopted&Auth=apiKey&HTTPS=true&Cors=yes&Category=Animals",
+					"protocol": "https",
+					"host": [
+						"api",
+						"publicapis",
+						"org"
+					],
+					"path": [
+						"entries"
+					],
+					"query": [
+						{
+							"key": "title",
+							"value": "AdoptAPet"
+						},
+						{
+							"key": "Description",
+							"value": "Resource to help get pets adopted"
+						},
+						{
+							"key": "Auth",
+							"value": "apiKey"
+						},
+						{
+							"key": "HTTPS",
+							"value": "true"
+						},
+						{
+							"key": "Cors",
+							"value": "yes"
+						},
+						{
+							"key": "Category",
+							"value": "Animals"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Random",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "af8a87e4-edfd-4148-b69e-d6b7f3f097a6",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"pm.test(\"Count is correct\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.count).to.eql(jsonData.entries.length);",
+							"});",
+							"pm.test(\"Title is Correct\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.entries[0].API).to.eql(\"Transport for Czech Republic\");",
+							"});",
+							"pm.test(\"Description is Correct\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.entries[0].Description).to.eql(\"Czech transport API\");",
+							"});",
+							"pm.test(\"Auth is Correct\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.entries[0].Auth).to.eql(\"\");",
+							"});",
+							"pm.test(\"Supports HTTPS\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.entries[0].HTTPS).to.eql(true);",
+							"});",
+							"pm.test(\"Supports CORS\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.entries[0].Cors).to.eql(\"unknown\");",
+							"});",
+							"pm.test(\"Link is Correct\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.entries[0].Link).to.eql(\"https://www.chaps.cz/eng/products/idos-internet\");",
+							"});",
+							"pm.test(\"Category is Correct\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.entries[0].Category).to.eql(\"Transportation\");",
+							"});",
+							"",
+							"pm.test(\"Response contains count parameter\", function () {",
+							"    pm.expect(pm.response.text()).to.include(\"count\");",
+							"});",
+							"pm.test(\"Response contains count parameter\", function () {",
+							"    pm.expect(pm.response.text()).to.include(\"entries\");",
+							"});",
+							"pm.test(\"Response contains entries parameter\", function () {",
+							"    pm.expect(pm.response.text()).to.include(\"API\");",
+							"});",
+							"pm.test(\"Response contains Description parameter\", function () {",
+							"    pm.expect(pm.response.text()).to.include(\"Description\");",
+							"});",
+							"pm.test(\"Response contains Auth parameter\", function () {",
+							"    pm.expect(pm.response.text()).to.include(\"Auth\");",
+							"});",
+							"pm.test(\"Response contains HTTPS parameter\", function () {",
+							"    pm.expect(pm.response.text()).to.include(\"HTTPS\");",
+							"});",
+							"pm.test(\"Response contains Cors parameter\", function () {",
+							"    pm.expect(pm.response.text()).to.include(\"Cors\");",
+							"});",
+							"pm.test(\"Response contains Link parameter\", function () {",
+							"    pm.expect(pm.response.text()).to.include(\"Link\");",
+							"});",
+							"pm.test(\"Response contains Category parameter\", function () {",
+							"    pm.expect(pm.response.text()).to.include(\"Category\");",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "https://api.publicapis.org/random?title=Transport for Czech Republic&Description=Czech transport API&Auth&HTTPS=true&Cors=unknown&Category=Transportation",
+					"protocol": "https",
+					"host": [
+						"api",
+						"publicapis",
+						"org"
+					],
+					"path": [
+						"random"
+					],
+					"query": [
+						{
+							"key": "title",
+							"value": "Transport for Czech Republic"
+						},
+						{
+							"key": "Description",
+							"value": "Czech transport API"
+						},
+						{
+							"key": "Auth",
+							"value": null
+						},
+						{
+							"key": "HTTPS",
+							"value": "true"
+						},
+						{
+							"key": "Cors",
+							"value": "unknown"
+						},
+						{
+							"key": "Category",
+							"value": "Transportation"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Categories",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "e55c933e-75eb-4636-8b69-de19c8737581",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Count is correct\", function () {",
+							"        var jsonData = pm.response.json();",
+							"        pm.expect(jsonData.count).to.eql(jsonData.categories.length);",
+							"});",
+							"",
+							"pm.test(\"Response contains count parameter\", function () {",
+							"    pm.expect(pm.response.text()).to.include(\"count\");",
+							"});",
+							"",
+							"pm.test(\"Response contains count parameter\", function () {",
+							"    pm.expect(pm.response.text()).to.include(\"categories\");",
+							"});",
+							"",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "https://api.publicapis.org/categories",
+					"protocol": "https",
+					"host": [
+						"api",
+						"publicapis",
+						"org"
+					],
+					"path": [
+						"categories"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Random Entries by Category",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "6c4f3455-09bb-4bbe-a375-5edfcce11ee8",
+						"exec": [
+							"pm.sendRequest(\"https://api.publicapis.org/categories\", function (err, response) {",
+							"    var jsonData = response.json();",
+							"    var category = _.sample(jsonData.categories)",
+							"    console.log(category)",
+							"    pm.globals.set(\"category\", category);",
+							"    console.log(pm.request.url)",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "bf9db2ed-e65d-4b05-a88b-f25d891ac732",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"pm.test(\"Count is correct\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.count).to.eql(jsonData.entries.length);",
+							"});",
+							"",
+							"pm.test(\"Response contains count parameter\", function () {",
+							"    pm.expect(pm.response.text()).to.include(\"count\");",
+							"});",
+							"pm.test(\"Response contains count parameter\", function () {",
+							"    pm.expect(pm.response.text()).to.include(\"entries\");",
+							"});",
+							"pm.test(\"Response contains entries parameter\", function () {",
+							"    pm.expect(pm.response.text()).to.include(\"API\");",
+							"});",
+							"pm.test(\"Response contains Description parameter\", function () {",
+							"    pm.expect(pm.response.text()).to.include(\"Description\");",
+							"});",
+							"pm.test(\"Response contains Auth parameter\", function () {",
+							"    pm.expect(pm.response.text()).to.include(\"Auth\");",
+							"});",
+							"pm.test(\"Response contains HTTPS parameter\", function () {",
+							"    pm.expect(pm.response.text()).to.include(\"HTTPS\");",
+							"});",
+							"pm.test(\"Response contains Cors parameter\", function () {",
+							"    pm.expect(pm.response.text()).to.include(\"Cors\");",
+							"});",
+							"pm.test(\"Response contains Link parameter\", function () {",
+							"    pm.expect(pm.response.text()).to.include(\"Link\");",
+							"});",
+							"pm.test(\"Response contains Category parameter\", function () {",
+							"    pm.expect(pm.response.text()).to.include(\"Category\");",
+							"});",
+							"",
+							"var jsonData = pm.response.json();",
+							"pm.test(\"Categories is correct\", function () {",
+							"        var category = pm.globals.get(\"category\");",
+							"        for(var i=0;i<jsonData.entries.length;i++) {",
+							"            pm.expect(jsonData.entries[i].Category).to.eql(category);",
+							"            ",
+							"        }",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "https://api.publicapis.org/entries?category={{category}}",
+					"protocol": "https",
+					"host": [
+						"api",
+						"publicapis",
+						"org"
+					],
+					"path": [
+						"entries"
+					],
+					"query": [
+						{
+							"key": "category",
+							"value": "{{category}}"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
