@@ -6,7 +6,7 @@
 	},
 	"item": [
 		{
-			"name": "Health Check",
+			"name": "Check API Health before running all test",
 			"event": [
 				{
 					"listen": "test",
@@ -20,7 +20,7 @@
 							"    throw new Error(\"API Health Check Failed\");\r",
 							"}\r",
 							"else {\r",
-							"    //Check if response Alive it not true\r",
+							"    //Check if response Alive is not true and stop execution\r",
 							"    var jsonData = pm.response.json();\r",
 							"    if (jsonData.alive !== true) {\r",
 							"        console.log(jsonData)\r",
@@ -48,7 +48,8 @@
 						"key": "Content-Type",
 						"name": "Content-Type",
 						"value": "application/json",
-						"type": "text"
+						"type": "text",
+						"disabled": true
 					}
 				],
 				"body": {
@@ -71,7 +72,7 @@
 			"response": []
 		},
 		{
-			"name": "Entry",
+			"name": "PublicAPI - Entry Endpoint with custom params",
 			"event": [
 				{
 					"listen": "prerequest",
@@ -199,7 +200,88 @@
 			"response": []
 		},
 		{
-			"name": "Random",
+			"name": "PublicAPI - Entry Endpoint no params",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "6c4f3455-09bb-4bbe-a375-5edfcce11ee8",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "bf9db2ed-e65d-4b05-a88b-f25d891ac732",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"var jsonData = pm.response.json();",
+							"pm.test(\"Count is correct\", function () {",
+							"    ",
+							"    pm.expect(jsonData.count).to.eql(jsonData.entries.length);",
+							"});",
+							"pm.test(\"Response contains count parameter\", function () {",
+							"    pm.expect(pm.response.text()).to.include(\"count\");",
+							"});",
+							"pm.test(\"Response contains count parameter\", function () {",
+							"    pm.expect(pm.response.text()).to.include(\"entries\");",
+							"});",
+							"pm.test(\"Response contains entries parameter\", function () {",
+							"    pm.expect(pm.response.text()).to.include(\"API\");",
+							"});",
+							"pm.test(\"Response contains Description parameter\", function () {",
+							"    pm.expect(pm.response.text()).to.include(\"Description\");",
+							"});",
+							"pm.test(\"Response contains Auth parameter\", function () {",
+							"    pm.expect(pm.response.text()).to.include(\"Auth\");",
+							"});",
+							"pm.test(\"Response contains HTTPS parameter\", function () {",
+							"    pm.expect(pm.response.text()).to.include(\"HTTPS\");",
+							"});",
+							"pm.test(\"Response contains Cors parameter\", function () {",
+							"    pm.expect(pm.response.text()).to.include(\"Cors\");",
+							"});",
+							"pm.test(\"Response contains Link parameter\", function () {",
+							"    pm.expect(pm.response.text()).to.include(\"Link\");",
+							"});",
+							"pm.test(\"Response contains Category parameter\", function () {",
+							"    pm.expect(pm.response.text()).to.include(\"Category\");",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "https://api.publicapis.org/entries",
+					"protocol": "https",
+					"host": [
+						"api",
+						"publicapis",
+						"org"
+					],
+					"path": [
+						"entries"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "PublicAPI - Random Endpoint with custom params",
 			"event": [
 				{
 					"listen": "test",
@@ -324,31 +406,97 @@
 			"response": []
 		},
 		{
-			"name": "Categories",
+			"name": "PublicAPI - Random Endpoint no params",
 			"event": [
 				{
 					"listen": "test",
 					"script": {
-						"id": "e55c933e-75eb-4636-8b69-de19c8737581",
+						"id": "af8a87e4-edfd-4148-b69e-d6b7f3f097a6",
 						"exec": [
 							"pm.test(\"Status code is 200\", function () {",
 							"    pm.response.to.have.status(200);",
 							"});",
-							"",
 							"pm.test(\"Count is correct\", function () {",
-							"        var jsonData = pm.response.json();",
-							"        pm.expect(jsonData.count).to.eql(jsonData.categories.length);",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.count).to.eql(jsonData.entries.length);",
+							"});",
+							"pm.test(\"Response contains count parameter\", function () {",
+							"    pm.expect(pm.response.text()).to.include(\"count\");",
+							"});",
+							"pm.test(\"Response contains count parameter\", function () {",
+							"    pm.expect(pm.response.text()).to.include(\"entries\");",
+							"});",
+							"pm.test(\"Response contains entries parameter\", function () {",
+							"    pm.expect(pm.response.text()).to.include(\"API\");",
+							"});",
+							"pm.test(\"Response contains Description parameter\", function () {",
+							"    pm.expect(pm.response.text()).to.include(\"Description\");",
+							"});",
+							"pm.test(\"Response contains Auth parameter\", function () {",
+							"    pm.expect(pm.response.text()).to.include(\"Auth\");",
+							"});",
+							"pm.test(\"Response contains HTTPS parameter\", function () {",
+							"    pm.expect(pm.response.text()).to.include(\"HTTPS\");",
+							"});",
+							"pm.test(\"Response contains Cors parameter\", function () {",
+							"    pm.expect(pm.response.text()).to.include(\"Cors\");",
+							"});",
+							"pm.test(\"Response contains Link parameter\", function () {",
+							"    pm.expect(pm.response.text()).to.include(\"Link\");",
+							"});",
+							"pm.test(\"Response contains Category parameter\", function () {",
+							"    pm.expect(pm.response.text()).to.include(\"Category\");",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "https://api.publicapis.org/random",
+					"protocol": "https",
+					"host": [
+						"api",
+						"publicapis",
+						"org"
+					],
+					"path": [
+						"random"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "PublicAPI - Categories Endpoint",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "af8a87e4-edfd-4148-b69e-d6b7f3f097a6",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"pm.test(\"Count is correct\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.count).to.eql(jsonData.categories.length);",
 							"});",
 							"",
 							"pm.test(\"Response contains count parameter\", function () {",
 							"    pm.expect(pm.response.text()).to.include(\"count\");",
 							"});",
-							"",
-							"pm.test(\"Response contains count parameter\", function () {",
+							"pm.test(\"Response contains categories parameter\", function () {",
 							"    pm.expect(pm.response.text()).to.include(\"categories\");",
 							"});",
-							"",
-							"",
 							""
 						],
 						"type": "text/javascript"
@@ -378,13 +526,14 @@
 			"response": []
 		},
 		{
-			"name": "Random Entries by Category",
+			"name": "PublicAPI - Random Entries by Category",
 			"event": [
 				{
 					"listen": "prerequest",
 					"script": {
 						"id": "6c4f3455-09bb-4bbe-a375-5edfcce11ee8",
 						"exec": [
+							"//Generate a random category and return all entries for the random category",
 							"pm.sendRequest(\"https://api.publicapis.org/categories\", function (err, response) {",
 							"    var jsonData = response.json();",
 							"    var category = _.sample(jsonData.categories)",
@@ -436,7 +585,7 @@
 							"pm.test(\"Response contains Category parameter\", function () {",
 							"    pm.expect(pm.response.text()).to.include(\"Category\");",
 							"});",
-							"",
+							"//Loop through all categories response to ensure correct category is returned",
 							"var jsonData = pm.response.json();",
 							"pm.test(\"Categories is correct\", function () {",
 							"        var category = pm.globals.get(\"category\");",
